@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juliet — iOS Expense Tracker</title>
+<style>
+  :root {
+    --sky:      #87CEEB;
+    --sky-light:#E8F6FD;
+    --sky-mid:  #5AABCC;
+    --pink:     #F4C2C2;
+    --pink-light:#FDF0F0;
+    --ink:      #1A1A1A;
+    --grey:     #888888;
+    --grey-light:#F5F5F5;
+    --white:    #FFFFFF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: var(--white); color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--sky-light) 0%, var(--pink-light) 100%);
+    padding: 80px 24px 60px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--sky);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .hero h1 { font-size: clamp(52px, 8vw, 80px); font-weight: 700; letter-spacing: -2px; color: var(--ink); }
+  .hero-sub { font-size: 17px; color: var(--grey); margin-top: 10px; }
+  .hero-dots { display: flex; gap: 8px; justify-content: center; margin-top: 24px; }
+  .hero-dots span { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── SECTION ── */
+  section { padding: 72px 24px; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--sky-mid);
+    margin-bottom: 8px;
+  }
+  .section-title { font-size: clamp(26px, 4vw, 36px); font-weight: 700; line-height: 1.2; }
+  .section-desc { font-size: 15px; color: var(--grey); margin-top: 10px; max-width: 520px; line-height: 1.7; }
+
+  /* ── FEATURE ROWS ── */
+  .feature-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    padding: 56px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .feature-row.reverse { direction: rtl; }
+  .feature-row.reverse > * { direction: ltr; }
+  .feature-row.sky-bg   { background: var(--sky-light);  }
+  .feature-row.pink-bg  { background: var(--pink-light); }
+
+  .feature-text .tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .tag-sky  { background: var(--sky);  color: var(--ink); }
+  .tag-pink { background: var(--pink); color: var(--ink); }
+  .feature-text h2 { font-size: 28px; font-weight: 700; line-height: 1.25; }
+  .feature-text p  { font-size: 15px; color: var(--grey); margin-top: 10px; line-height: 1.7; }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .pill {
+    font-size: 12px; font-weight: 600; padding: 5px 12px;
+    border-radius: 20px; background: var(--grey-light); color: var(--ink);
+  }
+
+  /* ── PHONE FRAME ── */
+  .phone-wrap { display: flex; justify-content: center; }
+
+  /* ── TECH STACK ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .tech-card {
+    padding: 20px; border-radius: 14px;
+    background: var(--grey-light);
+  }
+  .tech-card .tc-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 12px;
+  }
+  .tc-sky  { background: var(--sky);  }
+  .tc-pink { background: var(--pink); }
+  .tech-card h3 { font-size: 14px; font-weight: 700; }
+  .tech-card p  { font-size: 12px; color: var(--grey); margin-top: 4px; line-height: 1.5; }
+
+  /* ── PALETTE ── */
+  .palette { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .swatch { border-radius: 12px; padding: 18px 28px; font-size: 12px; font-weight: 600; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: var(--white);
+    text-align: center; padding: 48px 24px;
+  }
+  footer h2 { font-size: 32px; font-weight: 700; }
+  footer p  { font-size: 14px; color: #888; margin-top: 8px; }
+  .footer-dots { display: flex; gap: 8px; justify-content: center; margin-top: 20px; }
+  .footer-dots span { width: 8px; height: 8px; border-radius: 50%; }
+
+  @media (max-width: 700px) {
+    .feature-row { grid-template-columns: 1fr; gap: 32px; }
+    .feature-row.reverse { direction: ltr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <span class="hero-badge">iOS App · 2026</span>
+  <h1>Juliet</h1>
+  <p class="hero-sub">Your money, your story. A fully local iOS expense tracker.</p>
+  <div class="hero-dots">
+    <span style="background:var(--sky)"></span>
+    <span style="background:var(--pink)"></span>
+    <span style="background:var(--sky)"></span>
+  </div>
+</div>
+
+<!-- ── PREFACE ── -->
+<section style="text-align:center; padding-bottom: 0;">
+  <div class="section-label">Why Juliet?</div>
+  <h2 class="section-title">Named after someone who gave<br>everything without counting the cost.</h2>
+  <p class="section-desc" style="margin: 14px auto 0;">
+    In Shakespeare's tragedy, Juliet keeps no accounts — she gives freely. This app is
+    named after her as a quiet reminder: money, like love, should be intentional.
+    Every rupee logged is a small act of self-awareness.
+  </p>
+</section>
+
+<!-- ── FEATURE 1: DAILY LOG ── -->
+<div class="feature-row sky-bg">
+  <div class="feature-text">
+    <span class="tag tag-sky">Daily Log</span>
+    <h2>Every expense,<br>in its moment.</h2>
+    <p>Log expenses and income by day. Add a tag, a note, and the account it came from — in seconds.</p>
+    <div class="pill-list">
+      <span class="pill">Tags & categories</span>
+      <span class="pill">ICICI · SBI · Fampay</span>
+      <span class="pill">Calendar with dots</span>
+      <span class="pill">Search & filter</span>
+    </div>
+  </div>
+  <div class="phone-wrap">
+    <svg width="220" height="400" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+      <!-- phone body -->
+      <rect x="8" y="2" width="204" height="396" rx="28" fill="#1A1A1A"/>
+      <rect x="12" y="6" width="196" height="388" rx="25" fill="white"/>
+      <!-- notch -->
+      <rect x="70" y="6" width="80" height="18" rx="9" fill="#1A1A1A"/>
+      <!-- status bar -->
+      <text x="24" y="36" font-size="9" fill="#888" font-family="sans-serif">10:30</text>
+      <rect x="170" y="29" width="22" height="8" rx="2" fill="#1A1A1A" opacity=".15"/>
+      <rect x="171" y="30" width="18" height="6" rx="1.5" fill="#1A1A1A" opacity=".4"/>
+      <!-- title -->
+      <text x="24" y="60" font-size="16" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">Juliet</text>
+      <!-- search bar -->
+      <rect x="16" y="68" width="188" height="24" rx="12" fill="#F5F5F5"/>
+      <text x="38" y="84" font-size="9" fill="#aaa" font-family="sans-serif">Search expenses...</text>
+      <!-- mini calendar -->
+      <text x="24" y="112" font-size="10" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">May 2026</text>
+      <!-- day headers -->
+      <g font-size="8" fill="#aaa" font-family="sans-serif">
+        <text x="22"  y="126">S</text><text x="48"  y="126">M</text>
+        <text x="74"  y="126">T</text><text x="100" y="126">W</text>
+        <text x="126" y="126">T</text><text x="152" y="126">F</text>
+        <text x="178" y="126">S</text>
+      </g>
+      <!-- calendar days row 1 -->
+      <g font-size="9" font-family="sans-serif" fill="#1A1A1A">
+        <text x="49"  y="142">1</text><text x="75"  y="142">2</text>
+        <text x="101" y="142">3</text><text x="127" y="142">4</text>
+        <text x="153" y="142">5</text><text x="179" y="142">6</text>
+      </g>
+      <!-- row 2 -->
+      <g font-size="9" font-family="sans-serif" fill="#1A1A1A">
+        <text x="23"  y="158">7</text><text x="49"  y="158">8</text>
+        <text x="75"  y="158">9</text><text x="99"  y="158">10</text>
+        <text x="125" y="158">11</text><text x="151" y="158">12</text>
+        <text x="177" y="158">13</text>
+      </g>
+      <!-- today highlight -->
+      <circle cx="105" cy="155" r="9" fill="#87CEEB"/>
+      <text x="102" y="158" font-size="9" fill="#1A1A1A" font-family="sans-serif">10</text>
+      <!-- activity dots -->
+      <circle cx="53"  cy="163" r="2.5" fill="#ef4444"/>
+      <circle cx="131" cy="163" r="2.5" fill="#22c55e"/>
+      <circle cx="183" cy="163" r="2.5" fill="#eab308"/>
+      <!-- divider -->
+      <line x1="16" y1="175" x2="204" y2="175" stroke="#F4C2C2" stroke-width="0.8"/>
+      <!-- expense items -->
+      <g font-family="sans-serif">
+        <!-- item 1 -->
+        <rect x="16" y="182" width="188" height="34" rx="8" fill="#EEF7FC"/>
+        <rect x="20" y="186" width="3" height="26" rx="1.5" fill="#87CEEB"/>
+        <text x="30" y="197" font-size="8.5" font-weight="bold" fill="#1A1A1A">Coffee</text>
+        <text x="30" y="208" font-size="7.5" fill="#888">Food · ICICI</text>
+        <text x="172" y="202" font-size="9" font-weight="bold" fill="#1A1A1A">₹80</text>
+        <!-- item 2 -->
+        <rect x="16" y="221" width="188" height="34" rx="8" fill="#FDF0F0"/>
+        <rect x="20" y="225" width="3" height="26" rx="1.5" fill="#F4C2C2"/>
+        <text x="30" y="236" font-size="8.5" font-weight="bold" fill="#1A1A1A">Uber</text>
+        <text x="30" y="247" font-size="7.5" fill="#888">Travel · Fampay</text>
+        <text x="162" y="241" font-size="9" font-weight="bold" fill="#1A1A1A">₹120</text>
+        <!-- item 3 -->
+        <rect x="16" y="260" width="188" height="34" rx="8" fill="#EEF7FC"/>
+        <rect x="20" y="264" width="3" height="26" rx="1.5" fill="#87CEEB"/>
+        <text x="30" y="275" font-size="8.5" font-weight="bold" fill="#1A1A1A">Lunch</text>
+        <text x="30" y="286" font-size="7.5" fill="#888">Food · SBI</text>
+        <text x="162" y="280" font-size="9" font-weight="bold" fill="#1A1A1A">₹220</text>
+      </g>
+      <!-- summary card -->
+      <rect x="16" y="302" width="188" height="50" rx="10" fill="#87CEEB" opacity=".2"/>
+      <rect x="16" y="302" width="188" height="50" rx="10" fill="none" stroke="#87CEEB" stroke-width="1"/>
+      <text x="28" y="318" font-size="8" fill="#888" font-family="sans-serif">Total spent today</text>
+      <text x="28" y="334" font-size="14" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹420.00</text>
+      <text x="28" y="344" font-size="7.5" fill="#5AABCC" font-family="sans-serif">3 expenses · Food, Travel</text>
+      <!-- tab bar -->
+      <rect x="12" y="358" width="196" height="36" rx="0" fill="#F9F9F9"/>
+      <line x1="12" y1="358" x2="208" y2="358" stroke="#eee" stroke-width="0.5"/>
+      <rect x="12" y="358" width="49" height="36" fill="#E8F6FD"/>
+      <text x="25" y="371" font-size="7" fill="#87CEEB" font-weight="bold" font-family="sans-serif">Log</text>
+      <text x="72" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Analytics</text>
+      <text x="122" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Recurring</text>
+      <text x="171" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Wallet</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── FEATURE 2: ANALYTICS ── -->
+<div class="feature-row reverse pink-bg">
+  <div class="feature-text">
+    <span class="tag tag-pink">Analytics</span>
+    <h2>See where your<br>money actually goes.</h2>
+    <p>Pie and bar charts break down spending by tag, account, and time period — week, month, or custom range.</p>
+    <div class="pill-list">
+      <span class="pill">By category</span>
+      <span class="pill">By account</span>
+      <span class="pill">Weekly · Monthly</span>
+      <span class="pill">Swift Charts</span>
+    </div>
+  </div>
+  <div class="phone-wrap">
+    <svg width="220" height="400" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="2" width="204" height="396" rx="28" fill="#1A1A1A"/>
+      <rect x="12" y="6" width="196" height="388" rx="25" fill="white"/>
+      <rect x="70" y="6" width="80" height="18" rx="9" fill="#1A1A1A"/>
+      <text x="24" y="36" font-size="9" fill="#888" font-family="sans-serif">10:30</text>
+      <text x="24" y="60" font-size="16" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">Analytics</text>
+      <!-- period picker -->
+      <rect x="16" y="68" width="188" height="22" rx="11" fill="#F5F5F5"/>
+      <rect x="18" y="70" width="60" height="18" rx="9" fill="#87CEEB"/>
+      <text x="38" y="82" font-size="8" font-weight="bold" fill="#1A1A1A" font-family="sans-serif" text-anchor="middle">Week</text>
+      <text x="100" y="82" font-size="8" fill="#aaa" font-family="sans-serif" text-anchor="middle">Month</text>
+      <text x="158" y="82" font-size="8" fill="#aaa" font-family="sans-serif" text-anchor="middle">Custom</text>
+      <!-- PIE CHART -->
+      <!-- segments using arc paths -->
+      <g transform="translate(110,170)">
+        <!-- Food 40% -->
+        <path d="M0,0 L0,-58 A58,58 0 0,1 50,29 Z" fill="#87CEEB"/>
+        <!-- Travel 25% -->
+        <path d="M0,0 L50,29 A58,58 0 0,1 -14,56 Z" fill="#F4C2C2"/>
+        <!-- Home 20% -->
+        <path d="M0,0 L-14,56 A58,58 0 0,1 -57,7 Z" fill="#87CEEB" opacity=".5"/>
+        <!-- Other 15% -->
+        <path d="M0,0 L-57,7 A58,58 0 0,1 0,-58 Z" fill="#F4C2C2" opacity=".5"/>
+        <!-- center hole -->
+        <circle cx="0" cy="0" r="26" fill="white"/>
+        <text x="0" y="4" text-anchor="middle" font-size="9" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹1,840</text>
+      </g>
+      <!-- legend -->
+      <g font-family="sans-serif" font-size="8.5">
+        <rect x="22" y="240" width="8" height="8" rx="2" fill="#87CEEB"/>
+        <text x="34" y="248" fill="#1A1A1A">Food</text>
+        <text x="80" y="248" fill="#888">40%</text>
+        <rect x="110" y="240" width="8" height="8" rx="2" fill="#F4C2C2"/>
+        <text x="122" y="248" fill="#1A1A1A">Travel</text>
+        <text x="168" y="248" fill="#888">25%</text>
+        <rect x="22" y="256" width="8" height="8" rx="2" fill="#87CEEB" opacity=".5"/>
+        <text x="34" y="264" fill="#1A1A1A">Home</text>
+        <text x="80" y="264" fill="#888">20%</text>
+        <rect x="110" y="256" width="8" height="8" rx="2" fill="#F4C2C2" opacity=".5"/>
+        <text x="122" y="264" fill="#1A1A1A">Other</text>
+        <text x="168" y="264" fill="#888">15%</text>
+      </g>
+      <!-- bar chart label -->
+      <text x="24" y="285" font-size="8.5" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">By account</text>
+      <!-- bars -->
+      <g font-family="sans-serif">
+        <rect x="24" y="295" width="80" height="14" rx="4" fill="#87CEEB"/>
+        <text x="108" y="305" font-size="8" fill="#888">ICICI  ₹1,200</text>
+        <rect x="24" y="314" width="50" height="14" rx="4" fill="#F4C2C2"/>
+        <text x="78" y="324" font-size="8" fill="#888">SBI  ₹760</text>
+        <rect x="24" y="333" width="25" height="14" rx="4" fill="#87CEEB" opacity=".5"/>
+        <text x="53" y="343" font-size="8" fill="#888">Fampay  ₹380</text>
+      </g>
+      <!-- tab bar -->
+      <rect x="12" y="358" width="196" height="36" rx="0" fill="#F9F9F9"/>
+      <line x1="12" y1="358" x2="208" y2="358" stroke="#eee" stroke-width="0.5"/>
+      <text x="25" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Log</text>
+      <rect x="60" y="358" width="52" height="36" fill="#FDF0F0"/>
+      <text x="72" y="371" font-size="7" fill="#F4C2C2" font-weight="bold" font-family="sans-serif">Analytics</text>
+      <text x="122" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Recurring</text>
+      <text x="171" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Wallet</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── FEATURE 3: WALLET ── -->
+<div class="feature-row sky-bg">
+  <div class="feature-text">
+    <span class="tag tag-sky">Wallet</span>
+    <h2>Real-time balance,<br>zero guesswork.</h2>
+    <p>Auto-calculates your balance per account from opening balance + income − expenses. No manual entry needed.</p>
+    <div class="pill-list">
+      <span class="pill">ICICI · SBI · Fampay</span>
+      <span class="pill">Daily cashflow</span>
+      <span class="pill">Weekly trend chart</span>
+      <span class="pill">Fund Guard</span>
+    </div>
+  </div>
+  <div class="phone-wrap">
+    <svg width="220" height="400" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="2" width="204" height="396" rx="28" fill="#1A1A1A"/>
+      <rect x="12" y="6" width="196" height="388" rx="25" fill="white"/>
+      <rect x="70" y="6" width="80" height="18" rx="9" fill="#1A1A1A"/>
+      <text x="24" y="36" font-size="9" fill="#888" font-family="sans-serif">10:30</text>
+      <text x="24" y="60" font-size="16" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">Wallet</text>
+      <!-- total balance card -->
+      <rect x="16" y="68" width="188" height="60" rx="12" fill="#E8F6FD" stroke="#87CEEB" stroke-width="1"/>
+      <text x="28" y="84" font-size="8" fill="#888" font-family="sans-serif">Total Balance</text>
+      <text x="28" y="102" font-size="16" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹53,921.00</text>
+      <text x="150" y="84" font-size="7.5" fill="#888" font-family="sans-serif">Savings Rate</text>
+      <text x="155" y="97" font-size="11" font-weight="bold" fill="#F4C2C2" font-family="sans-serif">24.5%</text>
+      <text x="157" y="108" font-size="7" fill="#aaa" font-family="sans-serif">this month</text>
+      <!-- account cards -->
+      <rect x="16"  y="136" width="56" height="56" rx="10" fill="white" stroke="#87CEEB" stroke-width="1"/>
+      <text x="26"  y="150" font-size="6.5" fill="#888" font-family="sans-serif">ICICI</text>
+      <text x="22"  y="162" font-size="8" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹54,000</text>
+      <rect x="20"  y="166" width="22" height="10" rx="5" fill="#87CEEB" opacity=".3"/>
+      <text x="24"  y="174" font-size="6" fill="#5AABCC" font-family="sans-serif">Active</text>
+
+      <rect x="80"  y="136" width="56" height="56" rx="10" fill="white" stroke="#F4C2C2" stroke-width="1"/>
+      <text x="88"  y="150" font-size="6.5" fill="#888" font-family="sans-serif">SBI</text>
+      <text x="84"  y="162" font-size="8" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹18,200</text>
+      <rect x="84"  y="166" width="22" height="10" rx="5" fill="#F4C2C2" opacity=".3"/>
+      <text x="87"  y="174" font-size="6" fill="#cc6666" font-family="sans-serif">Active</text>
+
+      <rect x="144" y="136" width="56" height="56" rx="10" fill="white" stroke="#87CEEB" stroke-width="1"/>
+      <text x="152" y="150" font-size="6.5" fill="#888" font-family="sans-serif">Fampay</text>
+      <text x="148" y="162" font-size="8" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹2,400</text>
+      <rect x="148" y="166" width="22" height="10" rx="5" fill="#87CEEB" opacity=".3"/>
+      <text x="152" y="174" font-size="6" fill="#5AABCC" font-family="sans-serif">Active</text>
+
+      <!-- cashflow card -->
+      <rect x="16" y="200" width="188" height="68" rx="12" fill="white" stroke="#87CEEB" stroke-width="1"/>
+      <text x="28" y="216" font-size="9" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">Today's Cashflow</text>
+      <!-- 3 stats -->
+      <line x1="89" y1="224" x2="89" y2="260" stroke="#eee" stroke-width="0.8"/>
+      <line x1="141" y1="224" x2="141" y2="260" stroke="#eee" stroke-width="0.8"/>
+      <text x="52"  y="237" font-size="8" fill="#87CEEB" font-family="sans-serif" text-anchor="middle">↓</text>
+      <text x="52"  y="250" font-size="9" font-weight="bold" fill="#1A1A1A" font-family="sans-serif" text-anchor="middle">₹5,000</text>
+      <text x="52"  y="260" font-size="7" fill="#aaa" font-family="sans-serif" text-anchor="middle">Income</text>
+      <text x="115" y="237" font-size="8" fill="#F4C2C2" font-family="sans-serif" text-anchor="middle">↑</text>
+      <text x="115" y="250" font-size="9" font-weight="bold" fill="#1A1A1A" font-family="sans-serif" text-anchor="middle">₹420</text>
+      <text x="115" y="260" font-size="7" fill="#aaa" font-family="sans-serif" text-anchor="middle">Spent</text>
+      <text x="167" y="237" font-size="8" fill="#87CEEB" font-family="sans-serif" text-anchor="middle">✓</text>
+      <text x="167" y="250" font-size="9" font-weight="bold" fill="#1A1A1A" font-family="sans-serif" text-anchor="middle">₹4,580</text>
+      <text x="167" y="260" font-size="7" fill="#aaa" font-family="sans-serif" text-anchor="middle">Net</text>
+      <!-- trend chart -->
+      <rect x="16" y="276" width="188" height="70" rx="12" fill="#F9F9F9"/>
+      <text x="28" y="290" font-size="8.5" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">Balance Trend</text>
+      <!-- simple line chart -->
+      <polyline points="28,330 58,318 88,322 118,308 148,312 178,300 198,295"
+        fill="none" stroke="#87CEEB" stroke-width="2" stroke-linejoin="round"/>
+      <polyline points="28,330 58,318 88,322 118,308 148,312 178,300 198,295 198,340 28,340"
+        fill="#87CEEB" opacity=".12" stroke="none"/>
+      <!-- tab bar -->
+      <rect x="12" y="358" width="196" height="36" rx="0" fill="#F9F9F9"/>
+      <line x1="12" y1="358" x2="208" y2="358" stroke="#eee" stroke-width="0.5"/>
+      <text x="25" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Log</text>
+      <text x="72" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Analytics</text>
+      <text x="122" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Recurring</text>
+      <rect x="158" y="358" width="50" height="36" fill="#E8F6FD"/>
+      <text x="166" y="371" font-size="7" fill="#87CEEB" font-weight="bold" font-family="sans-serif">Wallet</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── FEATURE 4: RECURRING ── -->
+<div class="feature-row reverse pink-bg">
+  <div class="feature-text">
+    <span class="tag tag-pink">Recurring</span>
+    <h2>Never miss a<br>subscription again.</h2>
+    <p>Track all recurring payments with renewal dates, linked accounts, and login metadata in one place.</p>
+    <div class="pill-list">
+      <span class="pill">Netflix · Spotify · SIPs</span>
+      <span class="pill">Renewal dates</span>
+      <span class="pill">Mark as paid</span>
+      <span class="pill">Login metadata</span>
+    </div>
+  </div>
+  <div class="phone-wrap">
+    <svg width="220" height="400" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="2" width="204" height="396" rx="28" fill="#1A1A1A"/>
+      <rect x="12" y="6" width="196" height="388" rx="25" fill="white"/>
+      <rect x="70" y="6" width="80" height="18" rx="9" fill="#1A1A1A"/>
+      <text x="24" y="36" font-size="9" fill="#888" font-family="sans-serif">10:30</text>
+      <text x="24" y="60" font-size="16" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">Recurring</text>
+      <!-- monthly total -->
+      <rect x="16" y="68" width="188" height="36" rx="10" fill="#FDF0F0" stroke="#F4C2C2" stroke-width="1"/>
+      <text x="28" y="82" font-size="8" fill="#888" font-family="sans-serif">Monthly commitments</text>
+      <text x="28" y="96" font-size="13" font-weight="bold" fill="#1A1A1A" font-family="sans-serif">₹4,299 / month</text>
+      <!-- items -->
+      <g font-family="sans-serif">
+        <!-- Netflix -->
+        <rect x="16" y="112" width="188" height="42" rx="10" fill="white" stroke="#F4C2C2" stroke-width="0.8"/>
+        <rect x="20" y="116" width="3" height="34" rx="1.5" fill="#F4C2C2"/>
+        <text x="30" y="129" font-size="9" font-weight="bold" fill="#1A1A1A">Netflix</text>
+        <text x="30" y="141" font-size="7.5" fill="#888">Renews Jun 1 · SBI</text>
+        <text x="162" y="136" font-size="10" font-weight="bold" fill="#1A1A1A">₹649</text>
+        <rect x="160" y="142" width="36" height="10" rx="5" fill="#F4C2C2" opacity=".3"/>
+        <text x="165" y="150" font-size="6.5" fill="#cc6666">Monthly</text>
+        <!-- Spotify -->
+        <rect x="16" y="160" width="188" height="42" rx="10" fill="white" stroke="#87CEEB" stroke-width="0.8"/>
+        <rect x="20" y="164" width="3" height="34" rx="1.5" fill="#87CEEB"/>
+        <text x="30" y="177" font-size="9" font-weight="bold" fill="#1A1A1A">Spotify</text>
+        <text x="30" y="189" font-size="7.5" fill="#888">Renews Jun 5 · ICICI</text>
+        <text x="162" y="184" font-size="10" font-weight="bold" fill="#1A1A1A">₹119</text>
+        <rect x="156" y="191" width="42" height="10" rx="5" fill="#87CEEB" opacity=".25"/>
+        <text x="160" y="199" font-size="6.5" fill="#5AABCC">Paid this month</text>
+        <!-- SIP -->
+        <rect x="16" y="208" width="188" height="42" rx="10" fill="white" stroke="#F4C2C2" stroke-width="0.8"/>
+        <rect x="20" y="212" width="3" height="34" rx="1.5" fill="#F4C2C2"/>
+        <text x="30" y="225" font-size="9" font-weight="bold" fill="#1A1A1A">Mutual Fund SIP</text>
+        <text x="30" y="237" font-size="7.5" fill="#888">Renews Jun 10 · SBI</text>
+        <text x="152" y="232" font-size="10" font-weight="bold" fill="#1A1A1A">₹2,000</text>
+        <rect x="160" y="239" width="36" height="10" rx="5" fill="#F4C2C2" opacity=".3"/>
+        <text x="164" y="247" font-size="6.5" fill="#cc6666">Monthly</text>
+        <!-- iCloud -->
+        <rect x="16" y="256" width="188" height="42" rx="10" fill="white" stroke="#87CEEB" stroke-width="0.8"/>
+        <rect x="20" y="260" width="3" height="34" rx="1.5" fill="#87CEEB"/>
+        <text x="30" y="273" font-size="9" font-weight="bold" fill="#1A1A1A">iCloud Storage</text>
+        <text x="30" y="285" font-size="7.5" fill="#888">Renews Jun 18 · Fampay</text>
+        <text x="162" y="280" font-size="10" font-weight="bold" fill="#1A1A1A">₹75</text>
+        <rect x="156" y="287" width="42" height="10" rx="5" fill="#87CEEB" opacity=".25"/>
+        <text x="160" y="295" font-size="6.5" fill="#5AABCC">Paid this month</text>
+      </g>
+      <!-- tab bar -->
+      <rect x="12" y="358" width="196" height="36" rx="0" fill="#F9F9F9"/>
+      <line x1="12" y1="358" x2="208" y2="358" stroke="#eee" stroke-width="0.5"/>
+      <text x="25" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Log</text>
+      <text x="72" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Analytics</text>
+      <rect x="110" y="358" width="60" height="36" fill="#FDF0F0"/>
+      <text x="118" y="371" font-size="7" fill="#F4C2C2" font-weight="bold" font-family="sans-serif">Recurring</text>
+      <text x="171" y="371" font-size="7" fill="#aaa" font-family="sans-serif">Wallet</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── TECH STACK ── -->
+<section>
+  <div class="section-label">Built with</div>
+  <h2 class="section-title">Tech Stack</h2>
+  <p class="section-desc">100% native Apple frameworks. No third-party dependencies. No backend.</p>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tc-icon tc-sky">📱</div>
+      <h3>SwiftUI</h3>
+      <p>Declarative UI. Every screen built with modern SwiftUI views and animations.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tc-icon tc-pink">🗄️</div>
+      <h3>SwiftData</h3>
+      <p>Local persistence with Swift 6 strict concurrency. All data stays on-device.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tc-icon tc-sky">📊</div>
+      <h3>Swift Charts</h3>
+      <p>Native charting framework for pie, bar, and line trend visualisations.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tc-icon tc-pink">🔔</div>
+      <h3>UserNotifications</h3>
+      <p>Up to 6 scheduled daily reminders, fully customisable by time.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tc-icon tc-sky">⚡</div>
+      <h3>Swift 6</h3>
+      <p>Strict concurrency model — Sendable types, actor isolation, safe closures.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PALETTE ── -->
+<section style="background: var(--grey-light); max-width: 100%; padding: 48px 24px;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-label">Design</div>
+    <h2 class="section-title">Colour Palette</h2>
+    <div class="palette" style="margin-top: 24px;">
+      <div class="swatch" style="background:#87CEEB; color:#1A1A1A;">
+        Sky Blue<br><span style="font-size:11px; opacity:.7">#87CEEB</span>
+      </div>
+      <div class="swatch" style="background:#F4C2C2; color:#1A1A1A;">
+        Baby Pink<br><span style="font-size:11px; opacity:.7">#F4C2C2</span>
+      </div>
+      <div class="swatch" style="background:#FFFFFF; color:#1A1A1A; border: 1px solid #eee;">
+        White<br><span style="font-size:11px; opacity:.7">#FFFFFF</span>
+      </div>
+      <div class="swatch" style="background:#1A1A1A; color:#FFFFFF;">
+        Ink<br><span style="font-size:11px; opacity:.7">#1A1A1A</span>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--grey); margin-top:16px;">
+      Four colours only. Every element in the app uses this palette and its opacities — nothing more.
+    </p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <h2>Juliet</h2>
+  <p>Small logs. Big picture. Your money, your story.</p>
+  <div class="footer-dots">
+    <span style="background:#87CEEB"></span>
+    <span style="background:#F4C2C2"></span>
+    <span style="background:#87CEEB"></span>
+  </div>
+  <p style="margin-top:24px; font-size:12px; color:#555;">
+    Built by Sreyas Venkatesam · 2026 · SwiftUI · SwiftData · Swift Charts · 100% Local
+  </p>
+</footer>
+
+</body>
+</html>
